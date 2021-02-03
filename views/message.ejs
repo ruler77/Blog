@@ -1,0 +1,239 @@
+<%- include('header.ejs') -%>
+<title>文章详情</title>
+<link rel="stylesheet" href="/css/liuyan.css">
+<script src="/js/jquery.js"></script>
+<script src="/libs/semantic/semantic.min.js"></script>
+</head>
+<body>
+<!--导航-->
+<nav class="ui inverted attached segment m-padded-tb-mini">
+  <div class="ui container">
+    <div class="ui inverted secondary stackable menu">
+      <h2 class="ui teal header item">Blog</h2>
+        <a href="/index" class="m-item item m-mobile-hiden"><i class="home icon"></i>首页</a>
+        <a href="/types" class="m-item item m-mobile-hiden"><i class="idea icon"></i>分类</a>
+        <a href="/tags" class="m-item item m-mobile-hiden"><i class="tags icon"></i>标签</a>
+        <a href="/archives" class="m-item item m-mobile-hiden"><i class="clone icon"></i>归档</a>
+        <a href="#" class="m-item item m-mobile-hiden active"><i class="pencil alternate icon"></i>留言</a> 
+        <a href="#" class="m-item item m-mobile-hiden"><i class="comment outline icon"></i>友情链接</a> 
+        <a href="/about" class="m-item item m-mobile-hiden"><i class="info icon"></i>关于我</a>
+      <div class="right m-item item m-mobile-hiden">
+        <div class="ui input icon">
+          <input type="text" placeholder="Search...">
+          <i class="search link icon"></i> </div>
+      </div>
+    </div>
+  </div>
+  <a href="#" class="ui m-button-mobile icon button black m-right-top m-mobile-show"> <i class="sidebar icon"></i> </a> </nav>
+<!--中间内容--> 
+<!--animated为动画css，具体效果可看https://animate.style/-->
+<div id="waypoint" class="m-padded-tb-big m-container animated fadeIn"> 
+  <!--布局-->
+  <div class="ui container"> 
+    <!--头部-->
+    <div class="ui top attached segment">
+      <h2 class="ui centered header m-padded-tb-nomal">留言板</h2>
+    </div>
+    
+    <!--正文-->
+    <div class="ui attached padded segment" id="conteent" style="display: block;height:35em;">
+      <ul class="comment_ul" id="msg_ul">
+        <% let i = 0; %> 
+        <% msgs.forEach(e => { %>
+          <li class="haolabel" data_id="<%= e.id %>" style="<%= `z-index: 111;top:${Math.ceil(Math.random() * 20)}em;left:${Math.ceil(Math.random() * 50)}em;
+                      background-color: rgba( ${Math.ceil(Math.random() * 255)}, ${Math.ceil(Math.random() * 255)}, ${Math.ceil(Math.random() * 255)}, 0.8);
+                      display: flex; touch-action: none;`%>">
+            <div class="head"> <img src="<%= e.avatar %>">
+              <span class="unamepar">
+                <a href="#" rel="external nofollow" class="uname">
+                  <%= e.nickname %>
+                </a></span> <span class="label_date">
+                <%= e.datetime.toLocaleDateString() %>
+              </span>
+            </div>
+            <div class="body">
+              <div class="content">
+                <p>
+                  <%= e.content %>
+                </p>
+              </div>
+            </div>
+          </li>
+        <% }) %>
+      </ul>
+      
+      <script src="/js/draggabilly.pkgd.min.js"></script> 
+    </div>
+    
+    <!--评论区-->
+    <div class="ui bottom segment">
+      
+      <div id="comment_suc" class="ui positive message transition hidden">
+        <i class="close icon"></i>
+        <div class="header">留言成功！！！ </div>
+      </div>
+      
+      <div id="comment_err" class="ui error message transition hidden">
+        <i class="close icon"></i>
+        <div class="header">留言失败！！！ </div>
+      </div>
+      
+      <div id="comment-form" class="ui large form" action="/" method="post">
+        <div class="field">
+          <textarea name="content" placeholder="请输入评论信息..."></textarea>
+        </div>
+        <div class="fields">
+          <div class="field m-mobile-wide m-margin-bottom-small">
+            <div class="ui left icon input"> <i class="apple icon"></i>
+              <input type="text" name="avatar" placeholder="头像URL">
+            </div>
+          </div>
+          <div class="field m-mobile-wide m-margin-bottom-small">
+            <div class="ui left icon input"> <i class="user icon"></i>
+              <input type="text" name="nickname" placeholder="姓名">
+            </div>
+          </div>
+          <div class="field m-mobile-wide m-margin-bottom-small">
+            <div class="ui left icon input"> <i class="mail icon"></i>
+              <input type="text" name="email" placeholder="邮箱">
+            </div>
+          </div>
+          <div class="m-margin-bottom-small m-mobile-wide">
+            <button id="commentpost-btn" class="ui teal submit button m-mobile-wide" onclick="comment()"><i class="edit icon"></i>发布</button>
+          </div>
+        </div>
+        
+        <div class="ui error message"></div>
+      </div>
+    </div>
+    <script>
+        $('.message .close')
+        .on('click', function() {
+          $(this)
+            .closest('.message')
+            .transition('fade')
+          ;
+        });
+        var ulNum = 1;
+        let obj = {
+            id: 1,
+            avatar: './images/avatar/2.jpg',
+            nickname: 'lisi',
+            datetime: new Date().getUTCDate(),
+            content: "hello world"
+          }
+
+          function write(obj) {
+            const templete = `<li class="haolabel"  data_id = "${obj.id}" style="z-index: 111;
+            top:${Math.ceil(Math.random() * 20)}em;left:${Math.ceil(Math.random() * 50)}em;
+            background-color: rgba( ${Math.ceil(Math.random() * 255)}, ${Math.ceil(Math.random() * 255)}, ${Math.ceil(Math.random() * 255)}, 0.8);
+            display: flex; touch-action: none;">
+          <div class="head"> <img src="${obj.avatar}">
+            <span class="unamepar">
+              <a href="#" rel="external nofollow" class="uname">${obj.nickname}</a></span> <span
+              class="label_date">${obj.datetime}</span>
+          </div>
+          <div class="body">
+            <div class="content">
+              <p>${obj.content}</p>
+            </div>
+          </div>
+        </li>`
+            console.log(templete)
+            $("#msg_ul").append(templete);
+            $('.haolabel').draggabilly({
+              // 选项（配置）...
+              containment: '#conteent'
+            }).draggabilly('enable')
+          }
+
+          let ul = $('.haolabel').draggabilly({
+            // 选项（配置）...
+            containment: '#conteent'
+          })
+          ul.draggabilly('enable')
+        
+        
+        function comment() {
+          //  普通表单验证
+          $('.ui.form').form({
+            on: 'onclick',
+            fields: {
+              content: {
+                identifier: 'content',
+                rules: [{
+                  type: 'empty',
+                  prompt: '请输入评论内容'
+                }]
+              },
+              nickname: {
+                identifier: 'nickname',
+                rules: [{
+                  type: 'empty',
+                  prompt: '请输入用户名'
+                }]
+              },
+              email: {
+                identifier: 'email',
+                rules: [{
+                  type: 'email',
+                  prompt: '请输入正确的email'
+                }]
+              }
+            }
+          })
+
+          let data = {};
+          let arr = $(':input');
+          data.content = arr[1].value
+          data.url = arr[2].value
+          if(data.url==undefined||data.url=='')
+            data.url = '/images/avatar/'+Math.ceil(Math.random()*1000)+'.jpg'
+          data.nickname = arr[3].value
+          data.email = arr[4].value
+          if($('.ui.form').form("is valid")){
+
+            //输入验证通过
+            $.ajax({
+              url: "/message",
+              contentType: "application/json;charset=UTF-8",
+              data: JSON.stringify(data),
+              dataType: "json",
+              type: "post",
+              success: function (res) {
+                if (res.code == 1) {
+                  $('#comment_suc').toggleClass("hidden")
+                  setTimeout(function () {
+                    location.reload()
+                  }, 3000)
+                } else {
+                  $('#comment_err').toggleClass("hidden")
+                }
+              },
+              error: function () {
+                $('#comment_err').toggleClass("hidden")
+              }
+            });
+          }
+
+        }
+      </script> 
+    <!--评论区end--> 
+  </div>
+</div>
+<div id="toolbar" class="m-padded-big m-fixed m-right-bottom" style="display: none">
+  <div class="ui vertical icon buttons ">
+    <button type="button" class="ui toc teal button" >目录</button>
+    <a href="#comment-container" class="ui teal button" >留言</a>
+    <button class="ui wechat icon button"><i class="weixin icon"></i></button>
+    <div id="toTop-button" class="ui icon button" ><i class="chevron up icon"></i></div>
+  </div>
+</div>
+<div class="ui toc-container flowing popup transition hidden" style="width: 250px!important;">
+  <ol class="js-toc">
+  </ol>
+</div>
+<div id="qrcode" class="ui wechat-qr flowing popup transition hidden" style="width: 130px !important;"> 
+</div>
+  
+<%- include('footer.ejs') -%>

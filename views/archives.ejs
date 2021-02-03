@@ -1,0 +1,69 @@
+<%- include('header') -%>
+<title>归档</title>
+</head>
+<body>
+<!--导航-->
+<nav class="ui inverted attached segment m-padded-tb-mini">
+  <div class="ui container">
+    <div class="ui inverted secondary stackable menu">
+      <h2 class="ui teal header item">Blog</h2>
+        <a href="/index" class="m-item item m-mobile-hiden"><i class="home icon"></i>首页</a>
+        <a href="/types" class="m-item item m-mobile-hiden"><i class="idea icon"></i>分类</a>
+        <a href="/tags" class="m-item item m-mobile-hiden"><i class="tags icon"></i>标签</a>
+        <a href="/archives" class="active m-item item m-mobile-hiden"><i class="clone icon"></i>归档</a>
+        <a href="/message" class="m-item item m-mobile-hiden"><i class="pencil alternate icon"></i>留言</a>
+        <a href="#" class="m-item item m-mobile-hiden"><i class="comment outline icon"></i>友情链接</a>
+        <a href="/about" class="m-item item m-mobile-hiden"><i class="info icon"></i>关于我</a>
+      <div class="right m-item item m-mobile-hiden">
+        <div class="ui input icon">
+          <input type="text" placeholder="Search...">
+          <i class="search link icon"></i> </div>
+      </div>
+    </div>
+  </div>
+  <a href="#" class="ui m-button-mobile icon button black m-right-top m-mobile-show">
+    <i class="sidebar icon"></i>
+  </a>
+</nav>
+<!--中间内容-->
+<div class="m-padded-tb-big  m-container">
+  <!--布局-->
+  <div class="ui container">
+    <!--head-->
+    <div class="ui top attached segment">
+      <div class="ui middle aligned two column grid">
+        <div class="column">
+          <h3 class="ui teal header">归档</h3>
+        </div>
+        <div class="right aligned column">
+          共 <h2 class="ui orange header m-inline-block m-text-thin"> <%= num %>  </h2> 篇博客
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <% for( let index = 0; index < yearNum; index++ ) {  %>
+    <div class="ui container m-margin-tb-big"></div>
+      <h3 class="ui center aligned header"><%= Object.keys(list)[yearNum-index-1] %> </h3>
+      <div class="ui fluid vertical menu">
+        <% list[Object.keys(list)[yearNum-index-1]].forEach(e=> { %>
+          <a href="/blog/<%= e.id %> " target="_blank" class="item">
+            <span>
+              <span style="display: inline-block;width: 12em !important;font-size:large;">
+                <i class="m-margin-rl-big mini teal circle icon"></i><%= e.title %> 
+              </span>
+              <div class="metadata" style="display: inline-block;">
+                <span style="font-size: x-small;color:gray"><%= e.time.toLocaleString() %></span>
+              </div>
+            </span>
+            <div class="ui orange basic label m-padded mini">原创</div>
+          </a>
+        <% }) %>
+      </div>
+    <% } %>
+    
+  </div>
+
+</div>
+</div>
+<%- include('footer') -%>

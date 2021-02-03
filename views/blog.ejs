@@ -1,0 +1,350 @@
+<%- include('header') -%>
+  <link rel="stylesheet" href="/css/typo.css">
+  <link rel="stylesheet" href="/libs/prism/prism.css">
+  <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+  <script src="/js/jquery.js"></script>
+  <script src="/libs/semantic/semantic.min.js"></script>
+  <script src="/libs/prism/prism.js"></script>
+  <script src="/libs/qrcode/qrcode.min.js"></script>
+  <script src="/libs/tocbot/tocbot.min.js"></script>
+  <script src="/libs/waypoints/jquery.waypoints.min.js"></script>
+  <script src="/js/time.js"></script>
+  <title>文章详情</title>
+  </head>
+
+  <body>
+    <!--导航-->
+    <nav class="ui inverted attached segment m-padded-tb-mini">
+      <div class="ui container">
+        <div class="ui inverted secondary stackable menu">
+          <h2 class="ui teal header item">Blog</h2>
+          <a href="/index" class="m-item item m-mobile-hiden"><i class="home icon"></i>首页</a>
+          <a href="/types" class="m-item item m-mobile-hiden"><i class="idea icon"></i>分类</a>
+          <a href="/tags" class="m-item item m-mobile-hiden"><i class="tags icon"></i>标签</a>
+          <a href="/archives" class="m-item item m-mobile-hiden"><i class="clone icon"></i>归档</a>
+          <a href="/message" class="m-item item m-mobile-hiden"><i class="pencil alternate icon"></i>留言</a>
+          <a href="#" class="m-item item m-mobile-hiden"><i class="comment outline icon"></i>友情链接</a>
+          <a href="/about" class="m-item item m-mobile-hiden"><i class="info icon"></i>关于我</a>
+          <div class="right m-item item m-mobile-hiden">
+            <div class="ui input icon">
+              <input type="text" placeholder="Search...">
+              <i class="search link icon"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <a href="#" class="ui m-button-mobile icon button black m-right-top m-mobile-show">
+        <i class="sidebar icon"></i>
+      </a>
+    </nav>
+    <!--中间内容-->
+    <!--animated为动画css，具体效果可看https://animate.style/-->
+    <div id="waypoint" class="m-padded-tb-big m-container animated fadeIn">
+      <!--布局-->
+      <div class="ui container">
+        <!--头部-->
+        <div class="ui top attached segment">
+          <div class="ui horizontal link list">
+            <div class="item">
+              <img src="/images/tou.jpg" alt="headimage" class="ui avatar image">
+              <div class="content">
+                <a href="#" target="_blank" class="header">
+                  <%= article.user_id %>
+                </a>
+              </div>
+            </div>
+            <div class="item">
+              <i class="calendar icon"></i><span class="icon">
+                <%= article.time.toLocaleString() %>
+              </span>
+            </div>
+            <div class="item">
+              <i class="eye icon"></i><span class="icon">
+                <%= article.hits %>
+              </span>
+            </div>
+          </div>
+        </div>
+        <!--图片-->
+        <div class="ui attached segment">
+          <img src="/images/1000-850x400.jpg" alt="img" class="ui fluid rounded image">
+        </div>
+        <!--正文-->
+        <div class="ui attached padded segment">
+          <div class="ui basic right aligned segment">
+            <div class="ui orange basic label">转载</div>
+          </div>
+          <h2 class="ui centered header m-padded-tb-nomal">
+            <%= article.title %>
+          </h2>
+          <div class="js-toc-content typo content m-padded-lr-big-responsive">
+            <%- article.content %>
+          </div>
+          <!--标签-->
+          <div class="m-padded-lr-big">
+            <% tags.forEach(e => { %>
+              <a href="/tags/<%= e.id %> " class="ui label m-margin-tb-small" id="tag_show"><%= e.name %> </a>
+            <% }) %>
+          </div>
+
+          <!--赞赏-->
+          <div class="ui center aligned basic segment">
+            <button class="ui orange basic circular button" id="donation_btn" type="button">赞赏</button>
+          </div>
+          <!--赞赏显示内容-->
+          <div class="ui payQ flowing popup transition hidden">
+            <div class="ui orange basic label">
+              <div class="ui images" style="font-size: inherit !important">
+                <div class="image">
+                  <img src="/images/qrcode.png" alt="qrcode" class="ui rounded bordered image" style="width:120px">
+                  <div align="center">支付宝</div>
+                </div>
+                <div class="image">
+                  <img src="/images/qrcode.png" alt="qrcode" class="ui rounded bordered image" style="width:120px">
+                  <div align="center">微信</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <!--博客信息-->
+      <div class="ui attached positive message">
+        <div class="ui middle aligned grid">
+          <div class="eleven wide column">
+            <ui class="list">
+              <li>作者：张三（联系作者）</li>
+              <li>发表时间：<%= article.time.toLocaleString() %> </li>
+              <li>版权声明：自由转载-非商用-非衍生-保持署名（创意共享3.0许可证）</li>
+              <li>公共号转载：请在文末添加作者公众号二维码</li>
+            </ui>
+          </div>
+
+          <div class="five wide column">
+            <img src="/images/qrcode.png" alt="qrcode" class="ui right floated rounded bordered image m-padded-small"
+              style="width:100px">
+          </div>
+        </div>
+      </div>
+      <!--评论区-->
+      <div class="ui bottom attached segment">
+
+        <div id="comment_suc" class="ui positive message transition hidden">
+          <i class="close icon"></i>
+          <div class="header">评论成功！！！ </div>
+        </div>
+
+        <div id="comment_err" class="ui error message transition hidden">
+          <i class="close icon"></i>
+          <div class="header">评论失败！！！ </div>
+        </div>
+
+        <div class="ui small comments">
+          <h3 class="ui dividing header">Comments</h3>
+          <% comments.forEach(e => { %>
+            <div class="comment">
+              <a class="avatar">
+                <img src="<%= `/images/avatar/${Math.ceil(Math.random()*1100)}.jpg` %> ">
+              </a>
+              <div class="content">
+                <a class="author"><%= e.name %> </a>
+                <div class="metadata">
+                  <span class="showdate date" data = "<%= e.time.getTime() %> "></span>
+                </div>
+                <div class="text"><%= e.comment %>  </div>
+                <div class="actions">
+                  <a class="reply">Reply</a>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+
+        <div id="comment-form" class="ui large form" action="/" method="post">
+          <div class="field">
+            <textarea name="comment" placeholder="请输入评论信息..."></textarea>
+          </div>
+          <div class="fields">
+            <input type="hidden" name = "blogid" value="<%=article.id%>">
+            <div class="field m-mobile-wide m-margin-bottom-small">
+              <div class="ui left icon input"> <i class="user icon"></i>
+                <input type="text" name="name" placeholder="姓名">
+              </div>
+            </div>
+            <div class="field m-mobile-wide m-margin-bottom-small">
+              <div class="ui left icon input"> <i class="mail icon"></i>
+                <input type="text" name="email" placeholder="邮箱">
+              </div>
+            </div>
+            <div class="m-margin-bottom-small m-mobile-wide">
+              <button id="commentpost-btn" class="ui teal submit button m-mobile-wide" onclick="comment()"><i
+                  class="edit icon"></i>发布</button>
+            </div>
+          </div>
+        
+          <div class="ui error message"></div>
+        </div>
+
+      </div>
+      <!--评论区end-->
+    </div>
+    </div>
+
+    <div id="toolbar" class="m-padded-big m-fixed m-right-bottom" style="display: none">
+      <div class="ui vertical icon buttons ">
+        <button type="button" class="ui toc teal button">目录</button>
+        <a href="#comment-container" class="ui teal button">留言</a>
+        <button class="ui wechat icon button"><i class="weixin icon"></i></button>
+        <div id="toTop-button" class="ui icon button"><i class="chevron up icon"></i></div>
+      </div>
+    </div>
+
+    <div class="ui toc-container flowing popup transition hidden" style="width: 250px!important;">
+      <ol class="js-toc">
+
+      </ol>
+    </div>
+
+    <div id="qrcode" class="ui wechat-qr flowing popup transition hidden" style="width: 130px !important;">
+      <!--<img src="./static/images/wechat.jpg" alt="" class="ui rounded image" style="width: 120px !important;">-->
+    </div>
+    <script>
+      var a = document.querySelectorAll("#tag_show");
+      var className = ["grey", "red", "purple", "orange","yellow","green","teal","blue","violet","pink","brown"];
+      // let t = Math.floor((Math.random() * 11));
+      for (let i = 0; i < a.length; i++) {
+        $(a[i]).addClass(className[i%11])
+      }
+      $(function(){
+        let arr = $('.showdate').toArray()
+        arr.forEach(e => {
+          $(e).text(Time.formatTime($(e).attr('data')))
+        });
+      })
+      $('.message .close')
+          .on('click', function () {
+            $(this)
+              .closest('.message')
+              .transition('fade')
+              ;
+          });
+
+     
+      function comment() {
+        //  普通表单验证
+        $('.ui.form').form({
+          fields: {
+            comment: {
+              identifier: 'comment',
+              rules: [{
+                type: 'empty',
+                prompt: '请输入评论内容'
+              }]
+            },
+            name: {
+              identifier: 'name',
+              rules: [{
+                type: 'empty',
+                prompt: '请输入用户名'
+              }]
+            },
+            email: {
+              identifier: 'email',
+              rules: [{
+                type: 'email',
+                prompt: '请输入正确的email'
+              }]
+            }
+          }
+        });
+
+          let data = {};
+          let arr = $(':input[name]');
+          data.comment = arr[0].value
+          data.article_id = arr[1].value
+          data.name = arr[2].value
+          data.email = arr[3].value
+          if ($('.ui.form').form("is valid")) {
+
+            //输入验证通过
+            $.ajax({
+              url: "/comment",
+              contentType: "application/json;charset=UTF-8",
+              data: JSON.stringify(data),
+              dataType: "json",
+              type: "post",
+              success: function (res) {
+                if (res.code == 1) {
+                  $('#comment_suc').toggleClass("hidden")
+                  setTimeout(function () {
+                    location.reload()
+                  }, 3000)
+                } else {
+                  $('#comment_err').toggleClass("hidden")
+                }
+              },
+              error: function () {
+                $('#comment_err').toggleClass("hidden")
+              }
+            });
+          }
+        }
+      
+      $('.m-button-mobile').click(function () {
+        $('.m-item').toggleClass('m-mobile-hiden');
+      })
+
+      $('#donation_btn').popup({
+        popup: $('.payQ.popup'),
+        on: 'click',
+        position: 'bottom center'
+      });
+
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.js-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.js-toc-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3',
+      });
+
+
+      $('.toc.button').popup({
+        popup: $('.toc-container.popup'),
+        on: 'click',
+        position: 'left center'
+      });
+
+      $('.wechat').popup({
+        popup: $('.wechat-qr'),
+        position: 'left center'
+      });
+
+      var qrcode = new QRCode("qrcode", {
+        text: location.href,
+        width: 110,
+        height: 110,
+        colorDark: "teal",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+      });
+
+      $('#toTop-button').click(function () {
+        $(window).scrollTo(0, 500);
+      });
+
+      var waypoint = new Waypoint({
+        element: document.getElementById('waypoint'),
+        handler: function (direction) {
+          if (direction == 'down') {
+            $('#toolbar').show(100);
+          } else {
+            $('#toolbar').hide(500);
+          }
+          console.log('Scrolled to waypoint!  ' + direction);
+        }
+      })
+    </script>
+    <%- include('footer') -%>
